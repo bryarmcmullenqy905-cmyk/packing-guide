@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>京东物流 · 快递快运揽收包装标准查询</title>
+<style>
+:root{
+  --jd:#e1251b; --jd-dark:#c01d14; --bg:#f4f5f7; --card:#fff; --line:#e6e8eb;
+  --txt:#1f2329; --muted:#8a9099; --accent:#fff7f6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:"PingFang SC","Microsoft YaHei","Segoe UI",Arial,sans-serif;color:var(--txt);background:var(--bg);font-size:14px}
+a{color:var(--jd);text-decoration:none}
+/* header */
+header{position:sticky;top:0;z-index:50;background:linear-gradient(135deg,#e1251b,#c01d14);color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.header-inner{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;white-space:nowrap}
+.brand .logo{width:34px;height:34px;background:#fff;color:var(--jd);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px}
+.searchbox{flex:1;min-width:260px;display:flex;align-items:center;background:#fff;border-radius:22px;padding:2px 2px 2px 14px}
+.searchbox input{flex:1;border:none;outline:none;font-size:15px;padding:8px 6px;background:transparent;color:var(--txt)}
+.searchbox button{border:none;background:var(--jd-dark);color:#fff;font-size:14px;padding:8px 18px;border-radius:20px;cursor:pointer;font-weight:600}
+.searchbox button:hover{background:#a31610}
+/* layout */
+.layout{max-width:1180px;margin:18px auto;padding:0 20px;display:flex;gap:18px;align-items:flex-start}
+.sidebar{width:200px;flex-shrink:0;position:sticky;top:76px;max-height:calc(100vh - 96px);overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px}
+.sidebar h3{font-size:12px;color:var(--muted);padding:8px 10px 4px;letter-spacing:.5px}
+.sidebar a{display:block;padding:8px 10px;border-radius:8px;color:var(--txt);font-size:14px;cursor:pointer}
+.sidebar a:hover{background:var(--accent);color:var(--jd)}
+.sidebar a.active{background:var(--jd);color:#fff;font-weight:600}
+.sidebar .ref{margin-top:6px;border-top:1px solid var(--line);padding-top:6px}
+.main{flex:1;min-width:0}
+/* cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:16px;overflow:hidden}
+.card-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:10px;background:linear-gradient(180deg,#fff,#fbfbfc)}
+.card-head .t{font-size:16px;font-weight:700}
+.card-head .cat-tag{background:var(--accent);color:var(--jd);font-size:12px;padding:2px 8px;border-radius:10px;white-space:nowrap;margin-left:auto;flex-shrink:0}
+.card-body{padding:16px 18px}
+.badge{display:inline-block;background:#fff1f0;color:var(--jd);border:1px solid #ffd1cd;font-size:12px;padding:1px 8px;border-radius:8px;margin:0 4px 4px 0}
+.badge.gray{background:#f2f3f5;color:#5a6068;border-color:#e6e8eb}
+/* field rows */
+.field{margin-bottom:12px}
+.field .k{font-size:12px;color:var(--muted);margin-bottom:3px;font-weight:600;letter-spacing:.5px}
+.field .v{white-space:pre-wrap;line-height:1.7;font-size:14px}
+.field .v.small{font-size:13px}
+/* images */
+.imgs{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.imgs img{max-width:100%;max-height:220px;border:1px solid var(--line);border-radius:8px;cursor:zoom-in;background:#fff;object-fit:contain}
+.imgs img:hover{box-shadow:0 2px 10px rgba(0,0,0,.18)}
+/* cold chain table */
+table.cc{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+table.cc th,table.cc td{border:1px solid var(--line);padding:6px 10px;text-align:center}
+table.cc th{background:#fff4f3;color:var(--jd-dark);font-weight:600}
+table.cc td{background:#fff}
+table.cc td.empty{color:#c5c9cf}
+/* classification table */
+table.cls{width:100%;border-collapse:collapse;font-size:13px}
+table.cls th,table.cls td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+table.cls th{background:#f7f8fa;font-weight:600;white-space:nowrap}
+/* sections */
+.sec-title{font-size:15px;font-weight:700;margin:20px 0 12px;padding-left:10px;border-left:4px solid var(--jd)}
+.hint{color:var(--muted);text-align:center;padding:60px 20px;font-size:15px}
+.hint .big{font-size:40px;margin-bottom:12px}
+/* welcome grid */
+.welcome-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:16px}
+.welcome-grid a{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center;color:var(--txt);cursor:pointer;font-size:14px}
+.welcome-grid a:hover{border-color:var(--jd);color:var(--jd);box-shadow:0 2px 8px rgba(225,37,27,.12)}
+.result-info{padding:6px 2px 14px;color:var(--muted);font-size:13px}
+.result-info b{color:var(--jd)}
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty .e{font-size:36px;margin-bottom:10px}
+/* modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:100;align-items:center;justify-content:center;padding:30px;cursor:zoom-out}
+.modal.show{display:flex}
+.modal img{max-width:100%;max-height:100%;border-radius:6px;background:#fff}
+.modal .close{position:absolute;top:18px;right:26px;color:#fff;font-size:34px;cursor:pointer;line-height:1}
+@media(max-width:760px){.layout{flex-direction:column}.sidebar{width:100%;position:static;max-height:none}.sidebar a{display:inline-block;margin:2px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand"><span class="logo">JD</span> 京东物流 · 揽收包装标准查询</div>
+    <div class="searchbox">
+      <input id="q" type="text" placeholder="输入产品名称，例如：榴莲、手机、红酒、瓷砖…" autocomplete="off">
+      <button id="btn">查询</button>
+    </div>
+  </div>
+</header>
+<div class="layout">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="main" id="main"></main>
+</div>
+<div class="modal" id="modal"><span class="close" id="modalClose">&times;</span><img id="modalImg" src="" alt=""></div>
+
+<script src="data.js"></script>
+<script>
+const CATS = DATA.categories;
+const REF = DATA.reference;
+
+function esc(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ---------- search ---------- */
+function buildSearchText(){
+  const planIndex = [];
+  CATS.forEach((cat, ci) => {
+    const catText = (cat.name + ' ' + (cat.classification||[]).map(r => Object.values(r).join(' ')).join(' '));
+    cat.sections.forEach((sec, si) => {
+      sec.plans.forEach((p, pi) => {
+        let txt = [cat.name, sec.title, p.name];
+        Object.values(p.fields||{}).forEach(v => txt.push(v));
+        (p.subs||[]).forEach(s => Object.values(s).forEach(v => txt.push(v)));
+        planIndex.push({txt: txt.join(' '), cat: ci, sec: si, plan: pi});
+      });
+    });
+    cat._catText = catText;
+  });
+  return planIndex;
+}
+const PLAN_INDEX = buildSearchText();
+
+function tokenize(q){
+  return q.split(/[\s,，、/]+/).map(s => s.trim()).filter(Boolean);
+}
+
+function search(q){
+  const toks = tokenize(q);
+  if(!toks.length) return null;
+  const planHits = [];
+  PLAN_INDEX.forEach((e, idx) => {
+    let score = 0;
+    const low = e.txt.toLowerCase();
+    for(const t of toks){
+      if(low.includes(t.toLowerCase())) score++;
+    }
+    if(score) planHits.push({...e, score, idx});
+  });
+  planHits.sort((a,b) => b.score - a.score);
+  const catHits = [];
+  CATS.forEach((cat, ci) => {
+    let score = 0;
+    const low = (cat.name + ' ' + (cat._catText||'')).toLowerCase();
+    for(const t of toks){
+      if(low.includes(t.toLowerCase())) score++;
+    }
+    if(score) catHits.push({ci, score});
+  });
+  catHits.sort((a,b) => b.score - a.score);
+  return {toks, planHits, catHits};
+}
+
+/* ---------- render ---------- */
+function renderPlanCard(p, cat, sec){
+  let html = '<div class="card"><div class="card-head"><div><div class="t">'+esc(p.name)+'</div>';
+  const tags = [];
+  if(p.fields['适用产品']) tags.push('<span class="badge gray">适用：'+esc(p.fields['适用产品'])+'</span>');
+  if(p.fields['托寄物特性']) tags.push('<span class="badge">特性：'+esc(p.fields['托寄物特性'])+'</span>');
+  if(tags.length) html += '<div style="margin-top:6px">'+tags.join('')+'</div>';
+  html += '</div><span class="cat-tag">'+esc(cat.name)+' · '+esc(sec.title)+'</span></div><div class="card-body">';
+
+  if(p.fields['包装要点备注']) html += '<div class="field"><div class="k">包装要点备注</div><div class="v">'+esc(p.fields['包装要点备注'])+'</div></div>';
+  if(p.fields['推荐外包装']) html += '<div class="field"><div class="k">推荐外包装</div><div class="v">'+esc(p.fields['推荐外包装'])+'</div></div>';
+  if(p.fields['推荐内包装']) html += '<div class="field"><div class="k">推荐内包装</div><div class="v">'+esc(p.fields['推荐内包装'])+'</div></div>';
+
+  // cold chain
+  const hasCC = ['月份','重量','2D','3D','冰袋标准'].some(k => p.fields[k]);
+  if(hasCC){
+    html += '<div class="field"><div class="k">冷媒投放标准</div><table class="cc"><tr><th>月份</th><th>重量</th><th>2D</th><th>3D及以上</th><th>冰袋标准</th></tr>';
+    const rows = [{月份:p.fields['月份'],重量:p.fields['重量'],'2D':p.fields['2D'],'3D':p.fields['3D'],冰袋标准:p.fields['冰袋标准']}].concat(p.subs||[]);
+    rows.forEach(r => {
+      html += '<tr>' + ['月份','重量','2D','3D','冰袋标准'].map(k => {
+        const v = r[k] || '';
+        return v ? '<td>'+esc(v)+'</td>' : '<td class="empty">—</td>';
+      }).join('') + '</tr>';
+    });
+    html += '</table></div>';
+  }
+
+  // sub-cases (non cold chain, e.g. 底座不可拆除)
+  const nonCCSubs = (p.subs||[]).filter(s => !['月份','重量','2D','3D','冰袋标准'].some(k => s[k]));
+  if(nonCCSubs.length){
+    html += '<div class="field"><div class="k">细分情形</div>';
+    nonCCSubs.forEach(s => {
+      html += '<div class="v" style="border-left:3px solid #ffd1cd;padding-left:10px;margin-bottom:10px">';
+      if(s['适用产品']) html += '<div><span class="badge gray">'+esc(s['适用产品'])+'</span></div>';
+      if(s['托寄物特性']) html += '<div style="margin:4px 0"><span class="badge">'+esc(s['托寄物特性'])+'</span></div>';
+      if(s['包装要点备注']) html += '<div style="margin-top:4px">'+esc(s['包装要点备注'])+'</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  if(p.images && p.images.length){
+    html += '<div class="field"><div class="k">示意图</div><div class="imgs">' +
+      p.images.map(b => '<img src="'+b+'" loading="lazy" onclick="zoom(this.src)">').join('') +
+      '</div></div>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
+function categoryHTML(ci){
+  const cat = CATS[ci];
+  let html = '<div class="card"><div class="card-head"><div class="t">'+esc(cat.name)+'</div><span class="cat-tag">'+cat.sections.length+' 类方案</span></div><div class="card-body">';
+  if(cat.classification && cat.classification.length){
+    const keys = [];
+    cat.classification.forEach(r => Object.keys(r).forEach(k => { if(!keys.includes(k)) keys.push(k); }));
+    html += '<div class="k" style="font-size:12px;color:var(--muted);margin-bottom:6px">本类产品清单</div>';
+    html += '<table class="cls"><tr>'+keys.map(k=>'<th>'+esc(k)+'</th>').join('')+'</tr>';
+    cat.classification.forEach(r => {
+      html += '<tr>'+keys.map(k=>'<td>'+esc(r[k]||'')+'</td>').join('')+'</tr>';
+    });
+    html += '</table>';
+  }
+  if(cat.classification_images && cat.classification_images.length){
+    html += '<div class="imgs">'+cat.classification_images.map(b=>'<img src="'+b+'" loading="lazy" onclick="zoom(this.src)">').join('')+'</div>';
+  }
+  html += '</div></div>';
+  cat.sections.forEach(sec => {
+    html += '<div class="sec-title">'+esc(sec.title)+'</div>';
+    sec.plans.forEach(p => { html += renderPlanCard(p, cat, sec); });
+  });
+  return html;
+}
+function renderCategory(ci){
+  setMain(categoryHTML(ci));
+  highlightSidebar(ci);
+}
+
+function renderWelcome(){
+  let html = '<div class="card"><div class="card-body hint"><div class="big">📦</div><div style="font-size:17px;font-weight:600;margin-bottom:6px">输入产品名称，一键获取包装方案</div><div>支持搜索品类名、产品名，如“榴莲”“手机”“红酒”“瓷砖”“大件家具”等</div></div></div>';
+  html += '<div class="card"><div class="card-body"><div class="k" style="font-size:13px;color:var(--muted);margin-bottom:10px">按品类浏览</div><div class="welcome-grid">';
+  CATS.forEach((cat, i) => {
+    html += '<a onclick="renderCategory('+i+')">'+esc(cat.name)+'</a>';
+  });
+  html += '</div></div></div>';
+  html += '<div class="card"><div class="card-body"><div class="k" style="font-size:13px;color:var(--muted);margin-bottom:10px">参考标准</div><div class="welcome-grid">'+
+    '<a onclick="renderRef(\'基础运输包装要求\')">基础运输包装要求</a>'+
+    '<a onclick="renderRef(\'常见耗材介绍\')">常见耗材介绍</a>'+
+    '</div></div></div>';
+  setMain(html);
+  highlightSidebar(-1);
+}
+
+/* ---------- reference ---------- */
+function renderRef(name){
+  const r = REF[name];
+  let html = '<div class="card"><div class="card-head"><div class="t">'+esc(name)+'</div></div><div class="card-body">';
+  if(r.images && r.images.length){
+    html += '<div class="k" style="font-size:12px;color:var(--muted);margin-bottom:6px">材料图例</div>';
+    html += '<div class="imgs">'+r.images.map(im=>'<img src="'+im.src+'" loading="lazy" onclick="zoom(this.src)">').join('')+'</div>';
+  }
+  if(r.cells && r.cells.length){
+    html += '<div class="k" style="font-size:12px;color:var(--muted);margin:14px 0 6px">内容</div>';
+    html += '<div style="line-height:1.8;white-space:pre-wrap">';
+    r.cells.forEach(c => {
+      const v = c.v;
+      if(v === '返回目录') return;
+      // headings
+      if(/^[一二三四五六七八九十]+、/.test(v)) html += '<div style="font-weight:700;color:var(--jd-dark);margin:12px 0 4px;font-size:15px">'+esc(v)+'</div>';
+      else html += '<div>'+esc(v)+'</div>';
+    });
+    html += '</div>';
+  }
+  html += '</div></div>';
+  setMain(html);
+  highlightSidebar(name);
+}
+
+/* ---------- sidebar ---------- */
+function buildSidebar(){
+  let html = '<h3>产品品类</h3>';
+  CATS.forEach((cat, i) => {
+    html += '<a data-cat="'+i+'" onclick="renderCategory('+i+')">'+esc(cat.name)+'</a>';
+  });
+  html += '<div class="ref"><h3>参考标准</h3>'+
+    '<a data-ref="基础运输包装要求" onclick="renderRef(\'基础运输包装要求\')">基础运输包装要求</a>'+
+    '<a data-ref="常见耗材介绍" onclick="renderRef(\'常见耗材介绍\')">常见耗材介绍</a></div>';
+  document.getElementById('sidebar').innerHTML = html;
+}
+function highlightSidebar(key){
+  document.querySelectorAll('#sidebar a').forEach(a => a.classList.remove('active'));
+  if(typeof key === 'number' && key >= 0){
+    const el = document.querySelector('#sidebar a[data-cat="'+key+'"]');
+    if(el) el.classList.add('active');
+  } else if(typeof key === 'string'){
+    const el = document.querySelector('#sidebar a[data-ref="'+key+'"]');
+    if(el) el.classList.add('active');
+  }
+}
+function setMain(html){ document.getElementById('main').innerHTML = html; window.scrollTo({top:0,behavior:'smooth'}); }
+
+/* ---------- search render ---------- */
+function renderSearch(q){
+  const res = search(q);
+  if(!res) return;
+  let html = '<div class="result-info">共找到 <b>'+res.planHits.length+'</b> 条匹配方案'+(res.catHits.length?'，<b>'+res.catHits.length+'</b> 个相关品类':'')+' · 关键词：<b>'+esc(res.toks.join('、'))+'</b></div>';
+  const seenCats = new Set();
+  if(res.planHits.length){
+    res.planHits.forEach(hit => {
+      const cat = CATS[hit.cat];
+      if(!seenCats.has(hit.cat)){
+        html += '<div class="sec-title">'+esc(cat.name)+'</div>';
+        seenCats.add(hit.cat);
+      }
+      const sec = cat.sections[hit.sec];
+      html += renderPlanCard(sec.plans[hit.plan], cat, sec);
+    });
+  }
+  if(res.catHits.length){
+    const extra = res.catHits.filter(c => !seenCats.has(c.ci));
+    if(extra.length){
+      html += '<div class="sec-title">相关品类完整方案</div>';
+      extra.forEach(c => { html += categoryHTML(c.ci); });
+    }
+  }
+  if(!res.planHits.length && !res.catHits.length){
+    html += '<div class="empty"><div class="e">🔍</div>未找到相关包装方案，请尝试更短的产品名称（如“水果”“酒”“手机”）</div>';
+  }
+  setMain(html);
+  highlightSidebar(-1);
+}
+
+/* ---------- modal ---------- */
+function zoom(src){
+  const m = document.getElementById('modal');
+  document.getElementById('modalImg').src = src;
+  m.classList.add('show');
+}
+document.getElementById('modal').onclick = function(){ this.classList.remove('show'); };
+
+/* ---------- events ---------- */
+function doSearch(){
+  const q = document.getElementById('q').value.trim();
+  if(q) renderSearch(q); else renderWelcome();
+}
+document.getElementById('btn').onclick = doSearch;
+document.getElementById('q').addEventListener('keydown', e => { if(e.key === 'Enter') doSearch(); });
+document.getElementById('q').addEventListener('input', () => { const v = document.getElementById('q').value.trim(); if(!v) renderWelcome(); });
+
+buildSidebar();
+renderWelcome();
+</script>
+</body>
+</html>
