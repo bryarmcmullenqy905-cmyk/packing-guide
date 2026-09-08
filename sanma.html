@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三码推行 · 一线落地看板</title>
+<style>
+  :root{
+    --bg:#f4f5f7;
+    --card:#ffffff;
+    --ink:#1a1d21;
+    --ink2:#5b6472;
+    --ink3:#8a919e;
+    --line:#e8eaee;
+    --safety:#e5484d;
+    --safety-bg:#fdecec;
+    --experience:#2f7df6;
+    --experience-bg:#eaf1fe;
+    --marketing:#1fa971;
+    --marketing-bg:#e7f6ef;
+    --accent:#4f46e5;
+    --accent-2:#6d28d9;
+    --radius:16px;
+    --shadow:0 1px 2px rgba(16,24,40,.04),0 4px 16px rgba(16,24,40,.06);
+    --shadow-lg:0 8px 30px rgba(16,24,40,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+    background:var(--bg);color:var(--ink);
+    -webkit-font-smoothing:antialiased;line-height:1.6;
+  }
+  a{color:var(--accent);text-decoration:none}
+
+  /* ===== 顶部 ===== */
+  header{
+    position:sticky;top:0;z-index:20;
+    background:rgba(255,255,255,.86);backdrop-filter:saturate(180%) blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .head-inner{
+    max-width:1080px;margin:0 auto;padding:14px 20px;
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{display:flex;gap:4px}
+  .logo i{width:12px;height:26px;border-radius:4px}
+  .logo i:nth-child(1){background:var(--safety)}
+  .logo i:nth-child(2){background:var(--experience)}
+  .logo i:nth-child(3){background:var(--marketing)}
+  .brand h1{font-size:17px;font-weight:700;letter-spacing:.5px}
+  .brand p{font-size:12px;color:var(--ink3)}
+  nav{display:flex;gap:6px;margin-left:auto;background:var(--bg);padding:4px;border-radius:12px}
+  nav button{
+    border:none;background:transparent;cursor:pointer;
+    padding:7px 16px;border-radius:9px;font-size:14px;color:var(--ink2);font-weight:500;
+    transition:.15s;
+  }
+  nav button.active{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08);font-weight:600}
+  nav button:hover{color:var(--ink)}
+
+  /* ===== 主体 ===== */
+  main{max-width:1080px;margin:0 auto;padding:28px 20px 64px}
+  .panel{display:none;animation:fade .25s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .section-title{font-size:20px;font-weight:700;margin:4px 0 4px}
+  .section-sub{font-size:13.5px;color:var(--ink2);margin-bottom:20px}
+
+  /* ===== 三码卡片 ===== */
+  .codes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
+  @media(max-width:720px){.codes-grid{grid-template-columns:1fr}}
+  .code-card{
+    background:var(--card);border-radius:var(--radius);padding:20px;
+    box-shadow:var(--shadow);border-top:3px solid var(--c,#ddd);position:relative;overflow:hidden;
+  }
+  .code-card .ico{font-size:26px}
+  .code-card h3{font-size:17px;margin:8px 0 4px}
+  .code-card .en{font-size:11px;color:var(--ink3);letter-spacing:1px;text-transform:uppercase}
+  .code-card p{font-size:13px;color:var(--ink2);margin-top:8px}
+  .code-card .tag{display:inline-block;margin-top:12px;font-size:12px;padding:3px 10px;border-radius:20px;background:var(--tbg,#f0f0f0);color:var(--c,#666);font-weight:600}
+
+  /* 本质 高亮带 */
+  .essence{
+    background:linear-gradient(120deg,#4f46e5,#6d28d9);color:#fff;
+    border-radius:var(--radius);padding:24px 26px;box-shadow:var(--shadow-lg);
+    margin-bottom:22px;
+  }
+  .essence .kicker{font-size:12px;opacity:.8;letter-spacing:2px;margin-bottom:6px}
+  .essence .big{font-size:20px;font-weight:700;line-height:1.5}
+  .essence .big b{color:#ffe08a}
+  .essence .sub{margin-top:10px;font-size:13.5px;opacity:.92}
+
+  /* 解决什么 */
+  .solve{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin-bottom:22px}
+  @media(max-width:720px){.solve{grid-template-columns:1fr}}
+  .solve .col{
+    background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);
+  }
+  .solve .col h4{font-size:14px;margin-bottom:10px;color:var(--ink2);font-weight:600}
+  .chip{display:inline-block;padding:5px 12px;border-radius:20px;font-size:13px;font-weight:600;margin:3px 4px 3px 0}
+  .chip.muted{background:#f0f1f3;color:var(--ink3);text-decoration:line-through}
+  .chip.pain{background:#fdecec;color:var(--safety)}
+  .arrow{font-size:26px;color:var(--ink3);font-weight:700;text-align:center}
+
+  /* 落地推进 */
+  .roadmap{
+    background:var(--card);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);margin-bottom:22px;
+  }
+  .roadmap h4{font-size:15px;margin-bottom:16px}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:720px){.steps{grid-template-columns:1fr 1fr}}
+  .step{
+    border:1px solid var(--line);border-radius:12px;padding:14px;position:relative;background:#fafbfc;
+  }
+  .step .no{
+    width:26px;height:26px;border-radius:50%;background:#eef0f3;color:var(--ink2);
+    display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin-bottom:8px;
+  }
+  .step h5{font-size:14px;margin-bottom:3px}
+  .step p{font-size:12px;color:var(--ink3)}
+  .step.mine{border-color:var(--accent);background:#f3f1ff}
+  .step.mine .no{background:var(--accent);color:#fff}
+  .step.mine .mine-tag{position:absolute;top:-9px;right:12px;background:var(--accent);color:#fff;font-size:11px;padding:1px 8px;border-radius:10px;font-weight:600}
+
+  /* 目标 */
+  .goal{
+    display:flex;align-items:center;gap:12px;background:#fff8e6;border:1px solid #f3e3b2;
+    border-radius:var(--radius);padding:16px 20px;color:#8a6d1a;font-size:14px;font-weight:600;
+  }
+  .goal .star{font-size:20px}
+
+  /* ===== 题目生成 ===== */
+  .gen-card{
+    background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:22px;
+  }
+  textarea{
+    width:100%;min-height:150px;border:1px solid var(--line);border-radius:12px;
+    padding:14px;font-size:14px;font-family:inherit;color:var(--ink);resize:vertical;
+    background:#fafbfc;transition:.15s;
+  }
+  textarea:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(79,70,229,.10)}
+  .gen-tools{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}
+  select{
+    border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:14px;background:#fff;
+    color:var(--ink);cursor:pointer;font-family:inherit;
+  }
+  select:focus{outline:none;border-color:var(--accent)}
+  .btn{
+    border:none;cursor:pointer;border-radius:11px;padding:10px 20px;font-size:14px;font-weight:600;
+    font-family:inherit;transition:.15s;display:inline-flex;align-items:center;gap:6px;
+  }
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.28)}
+  .btn-primary:hover{background:#4338ca;transform:translateY(-1px)}
+  .btn-primary:active{transform:none}
+  .btn-ghost{background:#f0f1f3;color:var(--ink2)}
+  .btn-ghost:hover{background:#e5e7eb}
+  .btn-copy{background:#fff;color:var(--accent);border:1px solid #d5d3ff}
+  .btn-copy:hover{background:#f5f4ff}
+  .hint{font-size:12.5px;color:var(--ink3);margin-top:12px}
+
+  /* 输出 */
+  .meta{font-size:13px;color:var(--ink2);font-weight:600;margin-bottom:12px}
+  .empty{
+    background:var(--card);border:1px dashed var(--line);border-radius:var(--radius);
+    padding:30px;text-align:center;color:var(--ink3);font-size:14px;
+  }
+  .qcard{
+    background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:16px;
+  }
+  .qhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .badge{font-size:12px;font-weight:700;padding:3px 11px;border-radius:20px;color:#fff}
+  .b-fill{background:var(--experience)}
+  .b-choice{background:var(--accent)}
+  .b-judge{background:var(--marketing)}
+  .qno{font-size:12px;color:var(--ink3);font-weight:700}
+  .qstem{font-size:15.5px;font-weight:600;line-height:1.7;margin-bottom:6px}
+  .qstem b{color:var(--accent)}
+  .opts{margin:10px 0 6px}
+  .opt{
+    display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--line);
+    border-radius:10px;margin-bottom:8px;font-size:14px;cursor:default;transition:.15s;background:#fafbfc;
+  }
+  .opt .lt{
+    width:24px;height:24px;border-radius:50%;background:#eef0f3;color:var(--ink2);
+    display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;
+  }
+  .toggle{
+    border:none;background:none;cursor:pointer;color:var(--accent);font-size:13px;font-weight:600;
+    padding:6px 0;font-family:inherit;
+  }
+  .toggle:hover{text-decoration:underline}
+  .qanswer{display:none;margin-top:10px;padding:12px 14px;background:#f5f6ff;border-radius:10px;font-size:13.5px}
+  .qcard.show .qanswer{display:block;animation:fade .2s ease}
+  .qcard.show .opt[data-correct="1"]{border-color:var(--marketing);background:var(--marketing-bg)}
+  .qcard.show .opt[data-correct="1"] .lt{background:var(--marketing);color:#fff}
+  .qanswer .ans{color:var(--ink);font-weight:600;margin-bottom:4px}
+  .qanswer .ans b{color:var(--marketing)}
+  .qanswer .exp{color:var(--ink2);font-size:13px}
+
+  footer{max-width:1080px;margin:0 auto;padding:0 20px 40px;text-align:center;font-size:12px;color:var(--ink3)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <div class="brand">
+      <div class="logo"><i></i><i></i><i></i></div>
+      <div>
+        <h1>三码推行 · 一线落地看板</h1>
+        <p>安全管理 · 体验知识 · 营销工具</p>
+      </div>
+    </div>
+    <nav>
+      <button class="active" data-tab="overview" onclick="switchTab('overview')">三码概览</button>
+      <button data-tab="gen" onclick="switchTab('gen')">题目生成</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ 面板一：三码概览 ============ -->
+  <section class="panel active" id="panel-overview">
+    <h2 class="section-title">三码概览</h2>
+    <p class="section-sub">把标准、规则下沉到一线，把知识获取门槛降到最低</p>
+
+    <div class="codes-grid">
+      <div class="code-card" style="--c:var(--safety);--tbg:var(--safety-bg)">
+        <div class="ico">🛡️</div>
+        <div class="en">Safety</div>
+        <h3>安全管理</h3>
+        <p>将安全标准、操作规范与隐患上报流程下沉到一线，实现风险前置、执行到位。</p>
+        <span class="tag">标准 · 规则 · 底线</span>
+      </div>
+      <div class="code-card" style="--c:var(--experience);--tbg:var(--experience-bg)">
+        <div class="ico">💬</div>
+        <div class="en">Experience</div>
+        <h3>体验知识</h3>
+        <p>把服务话术、响应时效与客诉处理经验压缩成一线随手可查的知识点。</p>
+        <span class="tag">知识 · 话术 · 服务</span>
+      </div>
+      <div class="code-card" style="--c:var(--marketing);--tbg:var(--marketing-bg)">
+        <div class="ico">📈</div>
+        <div class="en">Marketing</div>
+        <h3>营销工具</h3>
+        <p>把营销玩法、推广工具与转化方法打包成一线可立即上手的作战工具箱。</p>
+        <span class="tag">工具 · 玩法 · 转化</span>
+      </div>
+    </div>
+
+    <div class="essence">
+      <div class="kicker">三码的本质</div>
+      <div class="big">把<b>标准、规则下沉到一线</b>，把<b>知识获取门槛降到最低</b></div>
+      <div class="sub">它解决的不是"要不要学"，而是"信息传递滞后"与"标准执行断层"两个断层。</div>
+    </div>
+
+    <div class="solve">
+      <div class="col">
+        <h4>❌ 不是解决这个问题</h4>
+        <span class="chip muted">要不要学（伪命题）</span>
+      </div>
+      <div class="arrow">→</div>
+      <div class="col">
+        <h4>✅ 而是解决这两个断层</h4>
+        <span class="chip pain">信息传递滞后</span>
+        <span class="chip pain">标准执行断层</span>
+      </div>
+    </div>
+
+    <div class="roadmap">
+      <h4>🚧 推行落地 · 现推进项</h4>
+      <div class="steps">
+        <div class="step">
+          <div class="no">1</div>
+          <h5>积分划定</h5>
+          <p>建立一线学习激励机制</p>
+        </div>
+        <div class="step mine">
+          <div class="no">2</div>
+          <h5>题目设计</h5>
+          <p>每周更新 · 1分钟快答</p>
+          <span class="mine-tag">我负责</span>
+        </div>
+        <div class="step">
+          <div class="no">3</div>
+          <h5>一线参与度提升</h5>
+          <p>降低参与门槛、提高覆盖</p>
+        </div>
+        <div class="step">
+          <div class="no">4</div>
+          <h5>激情提升</h5>
+          <p>营造比学赶超氛围</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="goal">
+      <span class="star">🎯</span>
+      <span>目标：尽可能让此举措发挥最大作用，真正服务一线。</span>
+    </div>
+  </section>
+
+  <!-- ============ 面板二：题目生成 ============ -->
+  <section class="panel" id="panel-gen">
+    <h2 class="section-title">题目生成看板</h2>
+    <p class="section-sub">粘贴每周学习内容，自动生成 2–3 道「1 分钟内可完成」的代表性题目</p>
+
+    <div class="gen-card">
+      <textarea id="inputText" placeholder="在此粘贴本周学习内容，例如：&#10;安全管理：每日作业前必须完成设备点检，发现隐患须在2小时内上报并立即整改。&#10;体验知识：客户投诉须在30分钟内响应，24小时内给出解决方案。&#10;（每行或每句一个知识点，效果最佳）"></textarea>
+      <div class="gen-tools">
+        <select id="category">
+          <option value="general">📚 通用</option>
+          <option value="safety">🛡️ 安全管理</option>
+          <option value="experience">💬 体验知识</option>
+          <option value="marketing">📈 营销工具</option>
+        </select>
+        <select id="count">
+          <option value="2">2 道题</option>
+          <option value="3" selected>3 道题</option>
+        </select>
+        <button class="btn btn-primary" onclick="generate()">✨ 生成题目</button>
+        <button class="btn btn-ghost" onclick="fillSample()">示例</button>
+        <button class="btn btn-copy" id="copyBtn" style="display:none" onclick="copyQuestions()">📋 复制题目</button>
+      </div>
+      <div class="hint">💡 内容中带有数字、时限、要求、关键词（如"必须 / 禁止 / 标准 / 流程"）时，出题效果最佳。</div>
+    </div>
+
+    <div class="meta" id="meta"></div>
+    <div id="output"></div>
+  </section>
+
+</main>
+
+<footer>京东物流 · 三码推行看板 · 单文件离线工具（可直接部署 GitHub Pages）</footer>
+
+<script>
+/* ===================== 工具函数 ===================== */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function unique(arr){
+  return [...new Set(arr.filter(x=>x))];
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function swapIn(sentence,term,rep){
+  const i=sentence.indexOf(term);
+  if(i===-1)return sentence;
+  return sentence.slice(0,i)+rep+sentence.slice(i+term.length);
+}
+function blankIn(sentence,term){
+  return swapIn(sentence,term,'＿＿＿＿');
+}
+
+/* ===================== 关键词库 ===================== */
+const CATEGORY_KEYWORDS = {
+  general:['标准','规范','流程','要求','时限','要点','关键','核心','步骤','指标','目标','数据','工具','操作'],
+  safety:['安全','事故','隐患','危险','防护','应急','上报','排查','整改','违规','处罚','消防','用电','设备','防护用品','风险','警示','预案','演练','责任','检查','培训'],
+  experience:['服务','客户','体验','话术','响应','满意度','投诉','时效','质量','态度','沟通','耐心','跟进','回访','解决','需求','好评','履约'],
+  marketing:['营销','推广','活动','优惠','券','拉新','转化','产品','渠道','业绩','玩法','权益','会员','复购','曝光','目标客户']
+};
+const STRONG_WORDS=['必须','禁止','严禁','不得','切勿','务必','要求','规定','标准','规范','流程','时限','周期','频率','步骤','要点','关键','核心','负责','上报','检查','培训','考核','第一时间','立即','及时','保证','确保','避免','防止','注意','落实','执行'];
+const GENERIC_NUM=['1小时','2小时','24小时','30分钟','1天','3次','5个','7天','15分钟'];
+
+/* ===================== 句子拆分 ===================== */
+function splitSentences(text){
+  const out=[];
+  const lines=String(text||'').split(/\r?\n/);
+  for(let raw of lines){
+    raw=raw.replace(/^\s*(?:\d+[\.、．)）]|[•●■□▪·\-–—*]\s*)+/,'').trim();
+    if(!raw)continue;
+    const parts=raw.split(/([。！？!?；;])/);
+    let buf='';
+    for(const p of parts){
+      buf+=p;
+      if(/^[。！？!?；;]$/.test(p)){
+        const s=buf.trim();
+        if(s.length>=4)out.push(s);
+        buf='';
+      }
+    }
+    const rest=buf.trim();
+    if(rest.length>=4)out.push(rest);
+  }
+  return out;
+}
+
+/* ===================== 关键信息抽取 ===================== */
+function extractTerms(sentence,category){
+  const terms=[];
+  const numRe=/\d+(?:\.\d+)?\s*(?:天|日|周|月|年|小时|分钟|秒|次|遍|个|人|元|块|%|％|件|单|台|套|公里|千米|米|条|项)?/g;
+  let m;
+  while((m=numRe.exec(sentence))){terms.push({term:m[0].trim(),type:'num'});}
+  const cw=(CATEGORY_KEYWORDS[category]||[]).concat(CATEGORY_KEYWORDS.general||[]);
+  for(const w of cw){if(w&&sentence.includes(w))terms.push({term:w,type:'cat'});}
+  for(const w of STRONG_WORDS){if(sentence.includes(w))terms.push({term:w,type:'strong'});}
+  const seen=new Set();
+  return terms.filter(t=>{if(seen.has(t.term))return false;seen.add(t.term);return true;});
+}
+function signal(it){
+  let s=0;
+  for(const t of it.terms)s+=t.type==='num'?3:t.type==='cat'?2:1;
+  return s;
+}
+function blankChunk(sentence){
+  if(sentence.length<=6)return{stem:sentence+'＿＿＿＿',answer:sentence};
+  const mid=Math.floor(sentence.length/2);
+  const start=Math.max(0,mid-2);
+  const len=Math.min(4,sentence.length-start);
+  const chunk=sentence.slice(start,start+len);
+  return{stem:sentence.slice(0,start)+'＿＿＿＿'+sentence.slice(start+len),answer:chunk};
+}
+
+/* ===================== 题目构建 ===================== */
+function buildFill(ordered,used){
+  for(const it of ordered){
+    if(used.has(it.id))continue;
+    const t=it.terms.find(x=>x.type==='num')||it.terms.find(x=>x.type==='cat')||it.terms.find(x=>x.type==='strong');
+    if(!t)continue;
+    used.add(it.id);
+    return{type:'fill',stem:blankIn(it.sentence,t.term),answer:t.term,explain:'原文：'+it.sentence};
+  }
+  return null;
+}
+function buildChoice(ordered,used,base,category){
+  for(const it of ordered){
+    if(used.has(it.id))continue;
+    const cand=it.terms.filter(t=>t.type==='cat'||t.type==='num');
+    if(!cand.length)continue;
+    const correct=cand[0].term,type=cand[0].type;
+    const same=[];
+    base.forEach(o=>{if(o.id===it.id)return;o.terms.forEach(t=>{if(t.type===type)same.push(t.term);});});
+    const pool=shuffle(unique(same.filter(x=>x!==correct)));
+    let options=[correct,...pool.slice(0,3)];
+    const bank=type==='num'?GENERIC_NUM:(CATEGORY_KEYWORDS[category]||CATEGORY_KEYWORDS.general||[]);
+    while(options.length<4){
+      const pad=(shuffle(bank)).find(x=>!options.includes(x));
+      if(!pad)break;options.push(pad);
+    }
+    options=shuffle(options);
+    used.add(it.id);
+    return{type:'choice',stem:blankIn(it.sentence,correct),options,answer:correct,explain:'原文：'+it.sentence};
+  }
+  return null;
+}
+function buildJudge(ordered,used,base){
+  for(const it of ordered){
+    if(used.has(it.id))continue;
+    const cand=it.terms.find(t=>t.type==='num'||t.type==='cat');
+    if(cand){
+      for(const o of base){
+        if(o.id===it.id)continue;
+        const rep=o.terms.find(t=>t.type===cand.type&&t.term!==cand.term);
+        if(rep){
+          const falseStem=swapIn(it.sentence,cand.term,rep.term);
+          if(falseStem&&falseStem!==it.sentence){
+            used.add(it.id);
+            return{type:'judge',stem:falseStem,answer:'错',explain:'正确表述：'+it.sentence};
+          }
+        }
+      }
+    }
+    used.add(it.id);
+    return{type:'judge',stem:it.sentence,answer:'对',explain:'该表述正确。'};
+  }
+  return null;
+}
+
+/* ===================== 生成入口 ===================== */
+function generateQuestions(text,count,category){
+  const sentences=splitSentences(text);
+  if(!sentences.length)return [];
+  const items=sentences.map((s,id)=>({id,sentence:s,terms:extractTerms(s,category)}));
+  const hasTerms=items.some(i=>i.terms.length);
+
+  // 完全无关键信息时的兜底
+  if(!hasTerms){
+    const qs=[];
+    const s0=items[0].sentence;
+    const fb=blankChunk(s0);
+    qs.push({type:'fill',stem:fb.stem,answer:fb.answer,explain:'原文：'+s0});
+    if(items[1])qs.push({type:'judge',stem:items[1].sentence,answer:'对',explain:'该表述正确。'});
+    else qs.push({type:'judge',stem:s0,answer:'对',explain:'该表述正确。'});
+    return qs.slice(0,count);
+  }
+
+  const base=items.filter(i=>i.terms.length);
+  const ordered=[...base].sort((a,b)=>signal(b)-signal(a));
+  const used=new Set();
+  const questions=[];
+  const typeOrder=count>=3?['fill','choice','judge']:['fill','choice'];
+
+  for(const t of typeOrder){
+    let q=null;
+    if(t==='fill')q=buildFill(ordered,used);
+    else if(t==='choice')q=buildChoice(ordered,used,base,category);
+    else q=buildJudge(ordered,used,base);
+    if(q)questions.push(q);
+  }
+  // 补齐不足
+  let guard=0;
+  while(questions.length<count&&guard++<10){
+    const extra=buildFill(ordered,used)||buildJudge(ordered,used,base);
+    if(!extra)break;
+    questions.push(extra);
+  }
+  return questions.slice(0,count);
+}
+
+/* ===================== 界面交互 ===================== */
+let currentQuestions=[];
+function switchTab(tab){
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+}
+function generate(){
+  const text=document.getElementById('inputText').value.trim();
+  const meta=document.getElementById('meta');
+  if(!text){
+    meta.textContent='⚠️ 请先输入本周学习内容';
+    document.getElementById('output').innerHTML='';
+    return;
+  }
+  const count=parseInt(document.getElementById('count').value)||3;
+  const category=document.getElementById('category').value;
+  const qs=generateQuestions(text,count,category);
+  render(qs);
+}
+function fillSample(){
+  document.getElementById('inputText').value=
+`安全管理：每日作业前必须完成设备点检，发现隐患须在2小时内上报并立即整改，严禁带病作业。
+体验知识：客户投诉须在30分钟内响应，24小时内给出解决方案，服务全程使用标准话术。
+营销工具：推广活动上线前需完成目标客户筛选，每日跟进转化数据，复购客户享受专属权益。`;
+  generate();
+}
+function render(questions){
+  currentQuestions=questions||[];
+  const out=document.getElementById('output');
+  const meta=document.getElementById('meta');
+  document.getElementById('copyBtn').style.display='none';
+  if(!currentQuestions.length){
+    out.innerHTML='<div class="empty">未能识别出可出题的内容，请补充更多具体信息（如数字、时限、要求、关键词等）。</div>';
+    meta.textContent='';
+    return;
+  }
+  const letters=['A','B','C','D'];
+  const typeLabel={fill:'填空题',choice:'单选题',judge:'判断题'};
+  let html='';
+  currentQuestions.forEach((q,idx)=>{
+    let optsHtml='';
+    if(q.type==='choice'&&q.options){
+      optsHtml='<div class="opts">'+q.options.map((o,i)=>
+        '<div class="opt" data-correct="'+(o===q.answer?'1':'0')+'"><span class="lt">'+letters[i]+'</span>'+escapeHtml(o)+'</div>'
+      ).join('')+'</div>';
+    }
+    html+=
+      '<div class="qcard" id="qc'+idx+'">'+
+        '<div class="qhead"><span class="badge b-'+q.type+'">'+typeLabel[q.type]+'</span><span class="qno">Q'+(idx+1)+'</span></div>'+
+        '<div class="qstem">'+escapeHtml(q.stem)+'</div>'+
+        optsHtml+
+        '<button class="toggle" onclick="toggleAnswer('+idx+')">查看答案</button>'+
+        '<div class="qanswer">'+
+          '<div class="ans">正确答案：<b>'+escapeHtml(q.answer)+'</b></div>'+
+          '<div class="exp">'+escapeHtml(q.explain||'')+'</div>'+
+        '</div>'+
+      '</div>';
+  });
+  out.innerHTML=html;
+  document.getElementById('copyBtn').style.display='inline-flex';
+  meta.textContent='✅ 已生成 '+currentQuestions.length+' 道题 · 预计用时 ≈ 1 分钟';
+}
+function toggleAnswer(idx){
+  const card=document.getElementById('qc'+idx);
+  card.classList.toggle('show');
+  const btn=card.querySelector('.toggle');
+  btn.textContent=card.classList.contains('show')?'收起答案':'查看答案';
+}
+function copyQuestions(){
+  if(!currentQuestions.length)return;
+  const letters=['A','B','C','D'];
+  const typeLabel={fill:'【填空题】',choice:'【单选题】',judge:'【判断题】'};
+  let txt='三码 · 本周学习题目\n——————————————\n';
+  currentQuestions.forEach((q,i)=>{
+    txt+=(i+1)+'. '+typeLabel[q.type]+' '+q.stem+'\n';
+    if(q.type==='choice'&&q.options)q.options.forEach((o,j)=>{txt+='   '+letters[j]+'. '+o+'\n';});
+    txt+='   答案：'+q.answer+'\n';
+    if(q.explain)txt+='   '+q.explain+'\n';
+    txt+='\n';
+  });
+  navigator.clipboard.writeText(txt).then(()=>{
+    const b=document.getElementById('copyBtn');const old=b.textContent;
+    b.textContent='已复制 ✓';setTimeout(()=>b.textContent=old,1200);
+  }).catch(()=>{
+    alert('复制失败，请手动选择文本复制。');
+  });
+}
+</script>
+</body>
+</html>
